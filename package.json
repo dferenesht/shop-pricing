@@ -1,0 +1,11 @@
+{
+	"name": "shop-pricing",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"build": "tsc"
+	},
+	"devDependencies": {
+		"typescript": "^7.0.2"
+	}
+}
