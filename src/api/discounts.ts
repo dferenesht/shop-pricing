@@ -26,7 +26,7 @@ export function createDiscountCode(request: CreateDiscountRequest): Result<Disco
 	}
 	const discount = { code: request.code, percent: request.percent, validUntil };
 	codes.set(request.code, discount);
-	return ok(discount);
+	return ok({ ...discount, validUntil: new Date(validUntil) });
 }
 
 export function describeDiscount(code: string): Result<string> {
