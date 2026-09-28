@@ -21,6 +21,9 @@ export function createDiscountCode(request: CreateDiscountRequest): Result<Disco
 	if (Number.isNaN(validUntil.getTime())) {
 		return err("validUntil must be a date");
 	}
+	if (codes.has(request.code)) {
+		return err(`Discount code ${request.code} already exists`);
+	}
 	const discount = { code: request.code, percent: request.percent, validUntil };
 	codes.set(request.code, discount);
 	return ok(discount);
