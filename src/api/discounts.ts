@@ -30,12 +30,18 @@ export function createDiscountCode(request: CreateDiscountRequest): Result<Disco
 }
 
 export function describeDiscount(code: string): Result<string> {
-	const discount = codes.get(code)!;
+	const discount = codes.get(code);
+	if (discount === undefined) {
+		return err(`Unknown discount code ${code}`);
+	}
 	return ok(`${discount.percent}% off until ${discount.validUntil.toISOString().slice(0, 10)}`);
 }
 
 export function redeemDiscount(code: string, totalOre: Ore, now: Date): Result<Ore> {
-	const discount = codes.get(code)!;
+	const discount = codes.get(code);
+	if (discount === undefined) {
+		return err(`Unknown discount code ${code}`);
+	}
 	if (isExpired(discount, now)) {
 		return err(`Discount code ${code} has expired`);
 	}
