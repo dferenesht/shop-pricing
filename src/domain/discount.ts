@@ -7,7 +7,7 @@ export interface DiscountCode {
 }
 
 export function isExpired(discount: DiscountCode, now: Date): boolean {
-	return now < discount.validUntil;
+	return now >= discount.validUntil;
 }
 
 export function applyDiscount(totalOre: Ore, percent: number): Ore {
