@@ -11,11 +11,14 @@ export interface CreateDiscountRequest {
 const codes = new Map<string, DiscountCode>();
 
 export function createDiscountCode(request: CreateDiscountRequest): Result<DiscountCode> {
-	if (!/^[a-z0-9]{4,20}$/i.test(request.code)) {
+	if (typeof request.code !== "string" || !/^[a-z0-9]{4,20}$/i.test(request.code)) {
 		return err("Code must be 4 to 20 letters or digits");
 	}
 	if (!Number.isInteger(request.percent) || request.percent < 1 || request.percent > 100) {
 		return err("Percent must be an integer from 1 to 100");
+	}
+	if (typeof request.validUntil !== "string") {
+		return err("validUntil must be a date");
 	}
 	const validUntil = new Date(request.validUntil);
 	if (Number.isNaN(validUntil.getTime())) {
