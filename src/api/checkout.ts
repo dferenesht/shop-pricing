@@ -1,9 +1,11 @@
 import { CartLine, cartTotal } from "../domain/cart";
 import { Ore, formatPrice } from "../domain/money";
 import { Result, err, ok } from "../domain/result";
+import { redeemDiscount } from "./discounts";
 
 export interface CheckoutRequest {
 	lines: CartLine[];
+	discountCode?: string;
 }
 
 export interface CheckoutResponse {
@@ -20,6 +22,13 @@ export function checkout(request: CheckoutRequest): Result<CheckoutResponse> {
 			return err(`Invalid quantity for ${line.sku}`);
 		}
 	}
-	const totalOre = cartTotal(request.lines);
+	let totalOre = cartTotal(request.lines);
+	if (request.discountCode !== undefined) {
+		const discounted = redeemDiscount(request.discountCode, totalOre, new Date());
+		if (!discounted.ok) {
+			return err(discounted.error);
+		}
+		totalOre = discounted.value;
+	}
 	return ok({ totalOre, display: formatPrice(totalOre) });
 }
